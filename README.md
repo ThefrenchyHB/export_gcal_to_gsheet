@@ -1,5 +1,5 @@
 # export_gcal_to_gsheet
-he export_gcal_to_gsheet function is designed to export events from a Google Calendar to a Google Sheet within a specified date range. Let's break down what this function does and how it accomplishes the task:
+The export_gcal_to_gsheet function is designed to export events from a Google Calendar to a Google Sheet within a specified date range. Let's break down what this function does and how it accomplishes the task:
 
 Authentication and Calendar Retrieval:
 
