@@ -1,0 +1,47 @@
+function export_gcal_to_gsheet(){
+  // Your calendar email address here
+  var mycal = Session.getActiveUser().getEmail();
+  var cal = CalendarApp.getCalendarById(mycal);
+
+  // Get the start and end dates from cells B3 and D3
+  var startDate = new Date(SpreadsheetApp.getActiveSheet().getRange('B3').getValue());
+  var endDate = new Date(SpreadsheetApp.getActiveSheet().getRange('D3').getValue());
+
+  // Increment the end date by one day to exclude events occurring on that day
+  endDate.setDate(endDate.getDate() + 1);
+
+  // Clear the contents of rows after row 6
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var lastRow = sheet.getLastRow();
+    if (lastRow > 6) {
+    sheet.getRange(7, 1, lastRow - 6, 6).clearContent();
+  }
+
+  // Get events from the calendar within the specified date range
+  var events = cal.getEvents(startDate, endDate, {search: '-project123'});
+
+  // Filter events occurring strictly before the end date
+  events = events.filter(function(event) {
+    return event.getStartTime() < endDate;
+  });
+
+  // Prepare event details for batch write
+  var eventData = events.map(function(event) {
+    return [getWeekDay(event.getStartTime()), event.getStartTime(), event.getEndTime(), event.getTitle(), event.getLocation(), event.getDescription()];
+  });
+
+  // Set the header row
+  var header = [["Week day", "Date/time start ", "Date/time end ", "Event Title", "Event Location" ,"Event Description"]];
+  sheet.getRange(5, 1, 1, 6).setValues(header);
+
+  // Populate the sheet with event details using batch write
+  if (eventData.length > 0) {
+    sheet.getRange(6, 1, eventData.length, 6).setValues(eventData);
+  }
+}
+
+function getWeekDay(date) {
+  var dayNumber = date.getDay();
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days[dayNumber];
+}
