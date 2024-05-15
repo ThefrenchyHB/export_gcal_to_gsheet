@@ -1,3 +1,35 @@
+La fonction `export_gcal_to_gsheet` est conçue pour exporter des événements d'un calendrier Google vers une feuille de calcul Google dans une plage de dates spécifiée. Voyons ce que fait cette fonction et comment elle accomplit cette tâche :
+
+1. **Authentification et récupération du calendrier** :
+   - Elle commence par récupérer l'adresse e-mail de l'utilisateur actuel (`Session.getActiveUser().getEmail()`) pour identifier le calendrier Google associé à cet utilisateur.
+   - Ensuite, elle récupère le calendrier en utilisant l'identifiant obtenu.
+
+2. **Détermination de la plage de dates** :
+   - La fonction récupère les dates de début et de fin pour l'exportation des événements à partir des cellules B3 et D3 de la feuille active, respectivement.
+   - Elle incrémente la date de fin d'un jour pour s'assurer que les événements sur cette journée sont exclus.
+
+3. **Effacement des données précédentes** :
+   - Elle efface le contenu des lignes après la ligne 6 dans la feuille de calcul Google pour supprimer toute donnée d'événement précédente. Cela garantit que seuls les événements les plus récents sont affichés.
+
+4. **Récupération des événements** :
+   - En utilisant les dates de début et de fin déterminées, elle récupère les événements du calendrier Google dans la plage de dates spécifiée.
+   - Facultativement, elle filtre les événements pour inclure uniquement ceux qui correspondent à une requête de recherche spécifique, spécifiée ici comme `'-project123'`.
+
+5. **Formatage et population** :
+   - Elle formate les événements récupérés dans un format structuré adapté à l'affichage dans la feuille de calcul Google.
+   - Elle définit la ligne d'en-tête dans la feuille de calcul Google avec des étiquettes pour différents attributs d'événement.
+   - Elle remplit la feuille de calcul Google avec les détails des événements, plaçant les attributs de chaque événement (comme l'heure de début, l'heure de fin, le titre, le lieu et la description) dans des colonnes séparées.
+
+6. **Optimisation de l'écriture en lot** :
+   - Pour optimiser les performances, elle utilise des écritures en lot pour définir les détails des événements dans la feuille de calcul Google. Cette approche minimise le nombre d'interactions avec l'API Google Sheets, améliorant ainsi l'efficacité, surtout pour les ensembles de données plus importants.
+
+7. **Récupération du jour de la semaine** :
+   - Elle inclut une fonction d'aide `getWeekDay` qui convertit un objet date en le nom du jour de la semaine correspondant (par exemple, dimanche, lundi, etc.). Cette fonction est utilisée pour déterminer le jour de la semaine de la date de début de chaque événement.
+
+En résumé, cette fonction automatise le processus d'exportation des événements récents d'un calendrier Google vers une feuille de calcul Google, offrant un moyen pratique de consulter et d'analyser les données d'événement.
+
+
+
 The `export_gcal_to_gsheet` function is designed to export events from a Google Calendar to a Google Sheet within a specified date range. Let's break down what this function does and how it accomplishes the task:
 
 1. **Authentication and Calendar Retrieval**:
